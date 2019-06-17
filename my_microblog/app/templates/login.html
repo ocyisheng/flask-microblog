@@ -4,11 +4,15 @@
     <script type="text/javascript">
         function set_openid(openid, pr)
         {
+            {#查找<username>字符串#}
             let u = openid.search('<username>')
             if (u != -1) {
+                {#找到就展示提示输入框#}
                 let user = prompt('Enter your ' + pr + ' username:')
+                {#获取输入的数据，并拼接链接#}
                 openid = openid.substr(0, u) + user
             }
+            {#获取name为login的form标签，并给openid字段赋值#}
             let form = document.forms['login'];
             form.elements['openid'].value = openid
         }
