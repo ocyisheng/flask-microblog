@@ -7,10 +7,11 @@
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+# 从config模块中导入Config类
+from config import Config
 
 app = Flask(__name__)
-app.config.from_object('config')
+app.config.from_object(Config)
 db = SQLAlchemy(app)
-
 
 from app import views, models
