@@ -8,17 +8,26 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_login import LoginManager
 # 从config模块中导入Config类
 from config import Config
 
+# flask
 app = Flask(__name__)
+# 配置
 app.config.from_object(Config)
+# db
 db = SQLAlchemy(app)
-migrate = Migrate(app,db)
+# db迁移
+migrate = Migrate(app, db)
+# 登陆扩展
+login = LoginManager(app)
 
-from app import views, models
+
+from app import routes, models
+from app.models import User, Post
 
 # 向flask shell运行环境中 添加自定义上下文
 @app.shell_context_processor
 def make_shell_context():
-	return {'db': db, 'User':models.User, 'Post':models.Post }
+	return {'db': db, 'User': User, 'Post': Post}
