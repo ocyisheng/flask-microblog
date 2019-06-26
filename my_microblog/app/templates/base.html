@@ -10,19 +10,23 @@
 
 </head>
 <body>
-    <div>Microblog: <a href="/index">Home</a></div>
+    <div>Microblog:
+        <a href="/index">Home</a>
+        <a href="/login">Login</a>
+    </div>
     <hr>
     <hr>
     {% with messages = get_flashed_messages() %}
     {% if messages %}
         <ul>
-        {% for foo in messages %}
-            <li>{{ foo }}</li>
-            <br>
-        {% endfor %}
+            {% for message in messages %}
+                <li>{{ message }}</li>
+                <br>
+            {% endfor %}
         </ul>
     {% endif %}
     {% endwith %}
-    {% block content %}{% endblock %}
+    {% block content %}
+    {% endblock %}
 </body>
 </html>
