@@ -123,7 +123,7 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/routes.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="459">
+            <state relative-caret-position="438">
               <caret line="46" column="36" selection-start-line="46" selection-start-column="36" selection-end-line="46" selection-end-column="36" />
               <folding>
                 <element signature="e#135#154#0" expanded="true" />
@@ -190,8 +190,8 @@
     <other-services-enabled>false</other-services-enabled>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="226" />
-    <option name="y" value="125" />
+    <option name="x" value="1037" />
+    <option name="y" value="75" />
     <option name="width" value="1140" />
     <option name="height" value="877" />
   </component>
@@ -377,12 +377,12 @@
       <workItem from="1560329528226" duration="1920000" />
       <workItem from="1560331999940" duration="12908000" />
       <workItem from="1561099474897" duration="5737000" />
-      <workItem from="1561513699984" duration="12574000" />
+      <workItem from="1561513699984" duration="12928000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="72024000" />
+    <option name="totallyTimeSpent" value="72378000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -394,8 +394,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="226" y="125" width="1140" height="877" extended-state="0" />
-    <editor active="true" />
+    <frame x="134" y="701" width="1140" height="877" extended-state="0" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19672132" />
       <window_info id="Structure" order="1" weight="0.24964234" />
@@ -405,13 +404,13 @@
       <window_info anchor="bottom" id="Database Console" weight="0.3299363" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3299363" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.24076433" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.24076433" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32866243" />
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Terminal" order="8" weight="0.26751593" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="8" visible="true" weight="0.26751593" />
       <window_info anchor="bottom" id="Python Console" order="9" sideWeight="0.49427754" weight="0.2178344" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50572246" side_tool="true" weight="0.34012738" />
       <window_info anchor="right" id="SciView" weight="0.32969034" />
@@ -640,7 +639,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/routes.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
+        <state relative-caret-position="438">
           <caret line="46" column="36" selection-start-line="46" selection-start-column="36" selection-end-line="46" selection-end-column="36" />
           <folding>
             <element signature="e#135#154#0" expanded="true" />
