@@ -22,7 +22,8 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 # 登陆扩展
 login = LoginManager(app)
-
+# 强制登陆认证
+login.login_view = 'login'
 
 from app import routes, models
 from app.models import User, Post

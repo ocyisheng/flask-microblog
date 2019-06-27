@@ -6,16 +6,19 @@
 # @Software: PyCharm
 
 from app import app
-from .froms import LoginForm
+from app import db
+from .froms import LoginForm, RegistrationForm
 from flask import render_template, flash, redirect, url_for
-from flask_login import current_user, login_user, logout_user
+from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User
+from flask import request
+from werkzeug.urls import url_parse
 
 
 @app.route('/')
 @app.route('/index')
+@login_required
 def index():
-    user = {'nickname': 'Miguel'}
     posts = [
         {
             'author': {'nickname': 'John'},
@@ -27,8 +30,22 @@ def index():
         },
     ]
     return render_template("index.html",
-                           user=user,
                            posts=posts)
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = User(username=form.username.data, email=form.email.data)
+        user.set_password(passwrod=form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('Congratulations , you are now a registered user !')
+        return redirect(url_for('login'))
+    return render_template('register.html', title='Register', form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -41,9 +58,15 @@ def login():
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
             return redirect(url_for('login'))
+        # 登陆UserMinx
         login_user(user=user, remember=form.remember_me.data)
+
+        # 重定向到next 页面
+        next_page = request.args.get('next')
+        if not next_page or url_parse(next_page).decode_netloc() != '':
+            next_page = url_parse('index')
         flash('Login successful')
-        return redirect(url_for('index'))
+        return redirect(next_page)
     return render_template('login.html', title='Sign In', form=form)
 
 
