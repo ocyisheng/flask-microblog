@@ -12,6 +12,11 @@
                 {% if user.last_seen %}
                     <p>Last seen on:{{ user.last_seen }}</p>
                 {% endif %}
+                {% if user==current_user %}
+                    <p>
+                        <a href="{{ url_for('edit_profile') }}">Edit your profile</a>
+                    </p>
+                {% endif %}
             </td>
         </tr>
     </table>
@@ -19,7 +24,7 @@
     <hr>
 
     {% for post in posts %}
-{#        使用子模版#}
+        {#        使用子模版#}
         {% include '_post.html' %}
     {% endfor %}
 
