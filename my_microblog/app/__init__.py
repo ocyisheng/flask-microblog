@@ -25,7 +25,7 @@ login = LoginManager(app)
 # 强制登陆认证
 login.login_view = 'login'
 
-from app import routes, models
+from app import routes, models, errors
 from app.models import User, Post
 
 # 向flask shell运行环境中 添加自定义上下文

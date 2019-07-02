@@ -9,16 +9,14 @@ from app import app
 
 
 def get_local_ip():
-	import socket
-	try:
-		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-		s.connect(('8.8.8.8', 80))
-		ip = s.getsockname()[0]
-	finally:
-		s.close()
-	return ip
+    import socket
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(('8.8.8.8', 80))
+    ip = s.getsockname()[0]
+    s.close()
+    return ip
 
 
 if __name__ == '__main__':
-	app.run(host=get_local_ip(), port='5000', debug=True)
-	# app.run(host='127.0.0.1', port='5000', debug=True)
+    app.run(host=get_local_ip(), port='5000', debug=False)
+# app.run(host='127.0.0.1', port='5000', debug=True)
