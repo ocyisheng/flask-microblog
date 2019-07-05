@@ -12,7 +12,7 @@ from flask_login import UserMixin
 from app import login
 from hashlib import md5
 
-# 关注关联表
+# User关注关联辅助表
 followers = db.Table(
     'follower',
     db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
@@ -47,7 +47,7 @@ class User(UserMixin, db.Model):
         return '<User {}, Email {}, Password_Hash {}, Post {}>'.format(self.username, self.email, self.password_hash,
                                                                        self.posts)
 
-    # 密码验证
+    # 密码设置与验证
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
@@ -58,6 +58,33 @@ class User(UserMixin, db.Model):
     def avatar(self, size):
         digest = md5(self.email.lower().encode('utf-8')).hexdigest()
         return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(digest, size)
+
+    # 关注
+    def follow(self, user):
+        if not self.is_following(user):
+            self.followed.append(user)
+
+    # 取消关注
+    def unfollow(self, user):
+        if self.is_following(user):
+            self.followed.remove(user)
+
+    # 是否关注
+    def is_following(self, user):
+        return self.followed.filter(followers.c.followed_id == user.id).count() > 0
+
+    # 当前用户已关注用户贴子的查询
+    def followed_posts(self):
+        # 1.用post表和follower表联合查询，条件是所有已经被关注user的所有post(followed_id==post.user_id)
+        # 2.过滤出当前user所关注的user的所有的post(follower_id == self.id)
+        # 3.按时间降序
+        # return Post.query.join(followers, (followers.c.followed_id == Post.user_id)). \
+        #     filter(followers.c.follower_id == self.id). \
+        #     order_by(Post.timestamp.desc())
+        followed = Post.query.join(followers, (followers.c.followed_id == Post.user_id)).\
+            filter(followers.c.follower_id == self.id)
+        own = Post.qurey.filter_by(user_id=self.id)
+        return followed.union(own).order_by(Post.timestamp.desc())
 
 
 @login.user_loader
