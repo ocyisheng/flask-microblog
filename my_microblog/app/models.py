@@ -38,7 +38,7 @@ class User(UserMixin, db.Model):
         secondary=followers,
         primaryjoin=(followers.c.follower_id == id),
         secondaryjoin=(followers.c.followed_id == id),
-        backref=db.backref('follower', lazy='dynamic'),
+        backref=db.backref('followers', lazy='dynamic'),
         lazy='dynamic'
     )
 
@@ -83,7 +83,7 @@ class User(UserMixin, db.Model):
         #     order_by(Post.timestamp.desc())
         followed = Post.query.join(followers, (followers.c.followed_id == Post.user_id)).\
             filter(followers.c.follower_id == self.id)
-        own = Post.qurey.filter_by(user_id=self.id)
+        own = Post.query.filter_by(user_id=self.id)
         return followed.union(own).order_by(Post.timestamp.desc())
 
 

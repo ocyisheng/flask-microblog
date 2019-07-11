@@ -42,6 +42,34 @@ def index():
                            posts=posts)
 
 
+# 关注
+@app.route('/user/<username>/follow')
+@login_required
+def follow(username):
+    followed_user = User.query.filter_by(username=username).first_or_404()
+    current_user.follow(followed_user)
+    flash('You are following {} !'.format(username))
+    posts = [
+        {'author': user, 'body': 'Test post #1'},
+        {'author': user, 'body': 'Test post #2'}
+    ]
+    return render_template('user.html', user=user, posts=posts)
+
+
+# 取消关注
+@app.route('/user/<username>/unfollow')
+@login_required
+def unfollow(username):
+    followed_user = User.query.filter_by(username=username).first_or_404()
+    current_user.unfollow(followed_user)
+    flash('You have not followed {} !'.format(username))
+    posts = [
+        {'author': user, 'body': 'Test post #1'},
+        {'author': user, 'body': 'Test post #2'}
+    ]
+    return render_template('user.html', user=user, posts=posts)
+
+
 # 用户信息展示
 @app.route('/user/<username>')
 @login_required
