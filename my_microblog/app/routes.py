@@ -48,12 +48,11 @@ def index():
 def follow(username):
     followed_user = User.query.filter_by(username=username).first_or_404()
     current_user.follow(followed_user)
-    flash('You are following {} !'.format(username))
     posts = [
-        {'author': user, 'body': 'Test post #1'},
-        {'author': user, 'body': 'Test post #2'}
+        {'author': followed_user, 'body': 'Test post #1'},
+        {'author': followed_user, 'body': 'Test post #2'}
     ]
-    return render_template('user.html', user=user, posts=posts)
+    return render_template('user.html', user=followed_user, posts=posts)
 
 
 # 取消关注
@@ -62,12 +61,11 @@ def follow(username):
 def unfollow(username):
     followed_user = User.query.filter_by(username=username).first_or_404()
     current_user.unfollow(followed_user)
-    flash('You have not followed {} !'.format(username))
     posts = [
-        {'author': user, 'body': 'Test post #1'},
-        {'author': user, 'body': 'Test post #2'}
+        {'author': followed_user, 'body': 'Test post #1'},
+        {'author': followed_user, 'body': 'Test post #2'}
     ]
-    return render_template('user.html', user=user, posts=posts)
+    return render_template('user.html', user=followed_user, posts=posts)
 
 
 # 用户信息展示
@@ -141,4 +139,4 @@ def edit_profile():
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.about_me.data = current_user.about_me
-        return render_template('edit_profile.html', title='Edit Profile', form=form)
+    return render_template('edit_profile.html', title='Edit Profile', form=form)
