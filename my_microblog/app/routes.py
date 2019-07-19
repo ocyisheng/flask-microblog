@@ -52,6 +52,8 @@ def follow(username):
         {'author': followed_user, 'body': 'Test post #1'},
         {'author': followed_user, 'body': 'Test post #2'}
     ]
+    db.session.commit()
+    flash('You are following {} !'.format(followed_user.username))
     return render_template('user.html', user=followed_user, posts=posts)
 
 
@@ -65,6 +67,8 @@ def unfollow(username):
         {'author': followed_user, 'body': 'Test post #1'},
         {'author': followed_user, 'body': 'Test post #2'}
     ]
+    db.session.commit()
+    flash('You are unfollowing {} !'.format(followed_user.username))
     return render_template('user.html', user=followed_user, posts=posts)
 
 
