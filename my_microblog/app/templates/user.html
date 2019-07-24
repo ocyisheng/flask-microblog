@@ -37,6 +37,11 @@
         {#        使用子模版#}
         {% include '_post.html' %}
     {% endfor %}
-
+     {% if prev_url %}
+        <a href="{{ prev_url }}">Prev Page</a>
+    {% endif %}
+    {% if next_url %}
+        <a href="{{ next_url }}">Next Page</a>
+    {% endif %}
 
 {% endblock %}
