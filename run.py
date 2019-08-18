@@ -18,5 +18,5 @@ def get_local_ip():
 
 
 if __name__ == '__main__':
-    app.run(host=get_local_ip(), port=5000, debug=True)
-# app.run(host='127.0.0.1', port='5000', debug=True)
+    # app.run(host=get_local_ip(), port=5000)
+	app.run()
