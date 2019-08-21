@@ -19,4 +19,6 @@ def get_local_ip():
 
 if __name__ == '__main__':
     # app.run(host=get_local_ip(), port=5000)
+	from werkzeug.middleware.proxy_fix import ProxyFix
+	app.wsgi_app = ProxyFix(app.wsgi_app)
 	app.run()
