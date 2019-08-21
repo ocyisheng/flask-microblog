@@ -2,13 +2,13 @@
     python web框架 flask 学习项目
 
 ## venv虚拟环境安装
-######Mac 
+#####Mac 
   * https://www.lizenghai.com/archives/8528.html
 
-######Ubuntu
+#####Ubuntu
    *
 
-######Windows
+#####Windows
    *
 
 ## venv 环境启动
