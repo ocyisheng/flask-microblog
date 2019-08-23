@@ -6,3 +6,5 @@ flask_wtf
 flask_login
 wtforms
 werkzeug
+flask-mail
+pyjwt

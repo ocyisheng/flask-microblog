@@ -31,3 +31,8 @@
 * . venv/bin/activate                          开启virtualenv
 * gunicorn -w 4 -b 127.0.0.1:5000 run:app      开启gunicorn
 * service nginx start                          开启nginx
+
+## 调试注意点记录
+***邮件***
+* 终端1 python3 -m smtpd -n -c DebuggingServer localhost:8025
+* 终端2 set MAIL_SERVER=localhost     set MAIL_PORT=8025

@@ -9,6 +9,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
+from flask_mail import Mail
 # 从config模块中导入Config类
 from config import Config
 import logging
@@ -28,6 +29,8 @@ migrate = Migrate(app, db)
 login = LoginManager(app)
 # 强制登陆认证
 login.login_view = 'login'
+# 邮件
+mail = Mail(app)
 
 from app import routes, models, errors
 from app.models import User, Post
@@ -60,14 +63,15 @@ def mail_notify():
 
 # 本地日志文件
 def file_logging():
-    if not os.path.exists('logs'):
-        os.mkdir('logs')
-    file_handler = RotatingFileHandler('logs/microblog.log', maxBytes=10240, backupCount=10)
-    file_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
-    file_handler.setLevel(logging.INFO)
-    app.logger.addHandler(file_handler)
+	if app.env is 'production':
+		if not os.path.exists('logs'):
+			os.mkdir('logs')
+		file_handler = RotatingFileHandler('logs/microblog.log', maxBytes=10240, backupCount=10)
+		file_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
+		file_handler.setLevel(logging.INFO)
+		app.logger.addHandler(file_handler)
 
 
 if not app.debug:
-    # mail_notify()
+    mail_notify()
     file_logging()

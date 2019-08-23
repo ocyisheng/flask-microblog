@@ -7,13 +7,14 @@
 
 from app import app
 from app import db
-from .froms import LoginForm, RegistrationForm, EditProfileForm, PostForm
+from .froms import LoginForm, RegistrationForm, EditProfileForm, PostForm, ResetPasswordRequestForm, ResetPasswordForm
 from flask import render_template, flash, redirect, url_for
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Post
 from flask import request
 from werkzeug.urls import url_parse
 from datetime import datetime
+from app.email import send_password_reset_email
 
 
 # 在请求发出前，记录当前用户访问的时间，作为上次访问的时间
@@ -113,6 +114,39 @@ def register():
         flash('Congratulations , you are now a registered user !')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
+
+
+@app.route('/reset_password_request', methods=['GET', 'POST'])
+def reset_password_request():
+	# 若已经登录
+	if current_user.is_authenticated:
+		return redirect(url_for('index'))
+	form = ResetPasswordRequestForm()
+	if form.validate_on_submit():
+		user = User.query.filter_by(email=form.email.data).first()
+		if user:
+			send_password_reset_email(user)
+			flash('Chceck your email for the instructions to rest your password !')
+		return redirect(url_for('login'))
+	return render_template('reset_password_request.html', title='Reset Password', form=form)
+
+@app.route('/reset_password/<token>', methods=['POST', 'GET'])
+def reset_password(token):
+	if current_user.is_authenticated:
+		return redirect(url_for('index'))
+	# 验证token是否通过
+	user = User.verify_reset_password_token(token)
+	if not user:
+		return redirect(url_for('index'))
+	form = ResetPasswordForm()
+	if form.validate_on_submit():
+		user.set_password(form.password.data)
+		db.session.commit()
+		flash('Your password has been reset.')
+		return redirect(url_for('login'))
+	return render_template('reset_password.html', title='Reset Password', form=form)
+
+
 
 
 # 登陆
