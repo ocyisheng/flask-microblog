@@ -8,3 +8,4 @@ wtforms
 werkzeug
 flask-mail
 pyjwt
+flask-bootstrap

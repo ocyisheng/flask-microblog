@@ -10,6 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_mail import Mail
+from flask_bootstrap import Bootstrap
 # 从config模块中导入Config类
 from config import Config
 import logging
@@ -31,6 +32,8 @@ login = LoginManager(app)
 login.login_view = 'login'
 # 邮件
 mail = Mail(app)
+# css 框架
+bootstrap = Bootstrap(app)
 
 from app import routes, models, errors
 from app.models import User, Post

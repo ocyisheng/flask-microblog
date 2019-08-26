@@ -9,7 +9,7 @@ FLASK_ENV=development
 
 # 运行状态 True
 # 生产环境必须为False
-# FLASK_DEBUG=True
+FLASK_DEBUG=True
 
 
 # 数据库路径
@@ -18,6 +18,6 @@ FLASK_ENV=development
 
 # 邮件本地测试
 # python3 -m smtpd -n -c DebuggingServer localhost:8025
-MAIL_PORT=8025
-MAIL_SERVER=localhost
-FLASK_DEBUG=False
+# MAIL_PORT=8025
+#MAIL_SERVER=localhost
+#FLASK_DEBUG=False
