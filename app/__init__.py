@@ -11,6 +11,7 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_bootstrap import Bootstrap
+from flask_moment import Moment
 # 从config模块中导入Config类
 from config import Config
 import logging
@@ -32,8 +33,10 @@ login = LoginManager(app)
 login.login_view = 'login'
 # 邮件
 mail = Mail(app)
-# css 框架
+# 页面美化 框架
 bootstrap = Bootstrap(app)
+# 时间处理
+moment = Moment(app)
 
 from app import routes, models, errors
 from app.models import User, Post

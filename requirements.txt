@@ -9,3 +9,4 @@ werkzeug
 flask-mail
 pyjwt
 flask-bootstrap
+flask_moment
