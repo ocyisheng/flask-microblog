@@ -10,3 +10,4 @@ flask-mail
 pyjwt
 flask-bootstrap
 flask_moment
+flask_babel

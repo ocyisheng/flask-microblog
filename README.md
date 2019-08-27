@@ -6,10 +6,10 @@
    * 参看 https://www.lizenghai.com/archives/8528.html
 
 ***Ubuntu***
-   *
+   * 暂无  
    
 ***Windows***
-   *
+   * 暂无
 
 ## venv 环境启动
 ***在项目根目录下***
@@ -36,3 +36,23 @@
 ***邮件***
 * 终端1 python3 -m smtpd -n -c DebuggingServer localhost:8025
 * 终端2 set MAIL_SERVER=localhost     set MAIL_PORT=8025
+
+## 语言本地化
+***flask—babel 安装使用翻译功能***
+* pip安装flask-babel扩展
+* cd /data/www/my_microblog
+* pybabel extract -F babel.cfg -k _l -o messages.pot .   根据babel.cfg 读取_()_l()标记的代码和模版，生成.pot文件
+* pybabel init -i messages.pot -d app/translations -l zh  生成中文语言目录及相关的对照翻译文档.po
+* pybabel compile -d app/translations                   编译.po文件生成.mo文件，用于应用加载翻译
+
+***flask—babel 更新翻译***
+* cd /data/www/my_microblog
+* pybabel extract -F babel.cfg -k _l -o messages.pot .   
+* pybabel update -i messages.pot -d app/translations
+* pybabel compile -d app/translations  
+
+***flask—babel 翻译函数使用***
+* _() 用于request,如route .html中
+* _l() 用于form中 from flask_babel import lazy_gettext as _l
+* _('Hi,%(username)s.Welcome to login!',username=current_user.username)) 其中%(username)s是格式符号
+                                                                                       

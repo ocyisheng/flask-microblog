@@ -30,4 +30,7 @@ class Config(object):
 	MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
 	ADMINS = ['your-email@example.com']
 
+	# 分页配置
 	POSTS_PER_PAGE = 3
+	# 语言本地化
+	LANGUAGES = ['en', 'zh']
