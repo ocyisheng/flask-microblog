@@ -15,6 +15,8 @@ from flask import request
 from werkzeug.urls import url_parse
 # 本地化
 from flask_babel import _
+from flask import g
+from flask_babel import get_locale
 from datetime import datetime
 from app.email import send_password_reset_email
 
@@ -25,6 +27,9 @@ def before_request():
 	if current_user.is_authenticated:
 		current_user.last_seen = datetime.utcnow()
 		db.session.commit()
+	# g.locale = str(get_locale())
+	# 注意flask_babel.get_locale返回的和g.locale 需要的不相同
+	g.locale = 'zh_CN' if str(get_locale()).startswith('zh') else str(get_locale())
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -45,7 +50,7 @@ def index():
 	# url_for 可以将任何未使用参数包含到url中
 	next_url = url_for('index', page=posts.next_num) if posts.has_next else None
 	prev_url = url_for('index', page=posts.prev_num) if posts.has_prev else None
-	return render_template("index.html", title='Home Page', form=form,
+	return render_template("index.html", title=_('Home Page'), form=form,
 						   posts=posts.items, next_url=next_url, prev_url=prev_url)
 
 
@@ -57,7 +62,7 @@ def explore():
 	next_url = url_for('explore', page=posts.next_num) if posts.has_next else None
 	prev_url = url_for('explore', page=posts.prev_num) if posts.has_prev else None
 	# posts = Post.query.order_by(Post.timestamp.desc()).all()
-	return render_template('index.html', title='Explore', posts=posts.items, next_url=next_url, prev_url=prev_url)
+	return render_template('index.html', title=_('Explore'), posts=posts.items, next_url=next_url, prev_url=prev_url)
 
 
 # 关注
@@ -68,10 +73,12 @@ def follow(username):
 	if not followed_user:
 		flash(_('User %(username)s not found.', username=username))
 	current_user.follow(followed_user)
-	posts =  Post.query.filter_by(author=followed_user).all()
+	posts = Post.query.filter_by(author=followed_user).all()
 	db.session.commit()
 	flash(_('You are following %(username)s !', username=followed_user.username))
 	return render_template('user.html', user=followed_user, posts=posts)  # 取消关注
+
+
 @app.route('/user/<username>/unfollow')
 @login_required
 def unfollow(username):
@@ -96,7 +103,7 @@ def user(username):
 	prev_url = url_for('user', username=username, page=posts.prev_num) if posts.has_prev else None
 	next_url = url_for('user', username=username, page=posts.next_num) if posts.has_next else None
 
-	return render_template('user.html', title='Profile', user=user, posts=posts.items, next_url=next_url,
+	return render_template('user.html', title=_('Profile'), user=user, posts=posts.items, next_url=next_url,
 						   prev_url=prev_url)
 
 
@@ -113,7 +120,7 @@ def register():
 		db.session.commit()
 		flash(_('Congratulations , you are now a registered user !'))
 		return redirect(url_for('login'))
-	return render_template('register.html', title='Register', form=form)
+	return render_template('register.html', title=_('Register'), form=form)
 
 
 @app.route('/reset_password_request', methods=['GET', 'POST'])
@@ -128,7 +135,7 @@ def reset_password_request():
 			send_password_reset_email(user)
 			flash(_('Chceck your email for the instructions to reset your password !'))
 		return redirect(url_for('login'))
-	return render_template('reset_password_request.html', title='Reset Password', form=form)
+	return render_template('reset_password_request.html', title=_('Reset Password'), form=form)
 
 
 @app.route('/reset_password/<token>', methods=['POST', 'GET'])
@@ -145,7 +152,7 @@ def reset_password(token):
 		db.session.commit()
 		flash(_('Your password has been reset.'))
 		return redirect(url_for('login'))
-	return render_template('reset_password.html', title='Reset Password', form=form)
+	return render_template('reset_password.html', title=_('Reset Password'), form=form)
 
 
 # 登陆
@@ -167,7 +174,7 @@ def login():
 			next_page = url_parse('index')
 		flash(_('Login successful'))
 		return redirect(next_page)
-	return render_template('login.html', title='Sign In', form=form)
+	return render_template('login.html', title=_('Sign In'), form=form)
 
 
 # 登出
@@ -190,4 +197,4 @@ def edit_profile():
 	elif request.method == 'GET':
 		form.username.data = current_user.username
 		form.about_me.data = current_user.about_me
-	return render_template('edit_profile.html', title='Edit Profile', form=form)
+	return render_template('edit_profile.html', title=_('Edit Profile'), form=form)
