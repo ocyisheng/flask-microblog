@@ -40,6 +40,10 @@
 ## 语言本地化
 ***flask—babel 安装使用翻译功能***
 * pip安装flask-babel扩展
+* 根目录下添加配置文件babel.cfg
+   - [python: app/**.py]
+   - [jinja2: app/templates/**.html]
+   - extensions=jinja2.ext.autoescape,jinja2.ext.with_
 * cd /data/www/my_microblog
 * pybabel extract -F babel.cfg -k _l -o messages.pot .   根据babel.cfg 读取_()_l()标记的代码和模版，生成.pot文件
 * pybabel init -i messages.pot -d app/translations -l zh  生成中文语言目录及相关的对照翻译文档.po
@@ -55,4 +59,16 @@
 * _() 用于request,如route .html中
 * _l() 用于form中 from flask_babel import lazy_gettext as _l
 * _('Hi,%(username)s.Welcome to login!',username=current_user.username)) 其中%(username)s是格式符号
+
+## 添加自定义flask命令
+* import click 添加命令行参数 
+   - @click.argument('lang')
+* import app.cli 添加自定义命令
+   - @app.cli.group(name='自定义命令组名称',help='命令组功能描述') 添加命令组
+   - @自定义命令组名称.command(name='自定义命令',help='命令功能描述')
+* 必须将自定义命令command.py 导入到入口脚本中(run.py)
+* 自定义命令组使用
+   - flask 自定义命令组名称 自定义命令 参数
+ 
+    
                                                                                        
