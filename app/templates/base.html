@@ -52,6 +52,26 @@
     {{ super() }}
     {{ moment.include_moment() }}
     {{ moment.lang(g.locale) }}
+    <script>
+        {#jQ脚本        #}
+        function translate(sourceEle, destElem, sourceLang, destLang) {
+            {# $('#xxxid') jQ id选择器获取目标dom 并用loading图片替换#}
+            $(destElem).html('<img src="{{ url_for('static', filename='loading.gif') }}">');
+            {# post 表单请求 参数1 链接 参数2 参数
+                done 成功的回调 向目标dom的text赋值请求结果
+                fail 失败的回调 向目标dom的text赋值失败提示
+            #}
+            $.post('/translate', {
+                text: $(sourceEle).text(),
+                source_lang: sourceLang,
+                dest_lang: destLang
+            }).done(function (response) {
+                $(destElem).text('译文：'+ response['text'])
+            }).fail(function () {
+                $(destElem).text("{{ _('Error:Could not contact server.') }}")
+            })
+        }
+    </script>
 {% endblock %}
 
 {% block navbar %}

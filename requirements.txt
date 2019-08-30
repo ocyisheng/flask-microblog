@@ -11,3 +11,4 @@ pyjwt
 flask-bootstrap
 flask_moment
 flask_babel
+guess-language_spirit

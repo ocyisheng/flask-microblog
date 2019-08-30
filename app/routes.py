@@ -17,8 +17,14 @@ from werkzeug.urls import url_parse
 from flask_babel import _
 from flask import g
 from flask_babel import get_locale
+# 预测语言
+from guess_language import guess_language
 from datetime import datetime
-from app.email import send_password_reset_email
+from app.email_notify import send_password_reset_email
+
+# 翻译
+from flask import jsonify
+from app.translate import translate
 
 
 # 在请求发出前，记录当前用户访问的时间，作为上次访问的时间
@@ -32,13 +38,25 @@ def before_request():
 	g.locale = 'zh_CN' if str(get_locale()).startswith('zh') else str(get_locale())
 
 
+# 翻译
+@app.route('/translate', methods=['POST'])
+@login_required
+def translate_text():
+	result_data = {'text': translate(request.form['text'], request.form['source_lang'], request.form['dest_lang'])}
+	return jsonify(result_data)
+
+
+# 首页
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
 	form = PostForm()
 	if form.validate_on_submit():
-		post = Post(body=form.post.data, author=current_user)
+		language = guess_language(form.post.data)
+		if language == 'UNKONWN' or len(language) > 5:
+			language = ''
+		post = Post(body=form.post.data, author=current_user, language=language)
 		db.session.add(post)
 		db.session.commit()
 		flash(_('Your post is now live !'))
@@ -54,6 +72,7 @@ def index():
 						   posts=posts.items, next_url=next_url, prev_url=prev_url)
 
 
+# 浏览全部帖子
 @app.route('/explore')
 @login_required
 def explore():
@@ -79,6 +98,7 @@ def follow(username):
 	return render_template('user.html', user=followed_user, posts=posts)  # 取消关注
 
 
+# 取消关注
 @app.route('/user/<username>/unfollow')
 @login_required
 def unfollow(username):
@@ -123,6 +143,7 @@ def register():
 	return render_template('register.html', title=_('Register'), form=form)
 
 
+# 请求重置密码
 @app.route('/reset_password_request', methods=['GET', 'POST'])
 def reset_password_request():
 	# 若已经登录
@@ -138,6 +159,7 @@ def reset_password_request():
 	return render_template('reset_password_request.html', title=_('Reset Password'), form=form)
 
 
+# 重置密码
 @app.route('/reset_password/<token>', methods=['POST', 'GET'])
 def reset_password(token):
 	if current_user.is_authenticated:
@@ -184,6 +206,7 @@ def logout():
 	return redirect(url_for('index'))
 
 
+# 编辑个人信息
 @app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():

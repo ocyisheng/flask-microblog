@@ -21,6 +21,11 @@ followers = db.Table(
 	db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
 )
 
+# 告知登录扩展flask-login login对象当前的用户对象
+@login.user_loader
+def load_user(user_id):
+	return User.query.get(int(user_id))
+
 
 class User(UserMixin, db.Model):
 	# __tablename__ = 'm_users'
@@ -95,16 +100,10 @@ class User(UserMixin, db.Model):
 
 	@staticmethod
 	def verify_reset_password_token(token):
-		try:
-			id = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])['reset_password']
-		except:
-			return
-		return User.query.get(id)
-
-
-@login.user_loader
-def load_user(id):
-	return User.query.get(int(id))
+		result_data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+		if 'reset_password' in result_data:
+			user_id = result_data['reset_password']
+			return User.query.get(user_id)
 
 
 class Post(db.Model):
@@ -114,6 +113,9 @@ class Post(db.Model):
 	body = db.Column(db.String(1024))
 	timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+	# 语言
+	language = db.Column(db.String(5))
 
 	def __repr__(self):
 		return '<Post {}>'.format(self.body)

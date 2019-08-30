@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2019/8/22 3:02 PM
 # @Author  : Gao
-# @File    : email.py
+# @File    : email_notify.py
 # @Software: PyCharm
 
 from flask_mail import Message
@@ -11,7 +11,6 @@ from flask import render_template
 from app import app
 from threading import Thread
 from flask_babel import _
-
 
 def send_async_email(app, msg):
 	with app.app_context():

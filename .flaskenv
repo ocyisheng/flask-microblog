@@ -16,8 +16,9 @@ FLASK_DEBUG=True
 # DATABASE_URI=
 
 
-# 邮件本地测试
-# python3 -m smtpd -n -c DebuggingServer localhost:8025
-# MAIL_PORT=8025
+## 邮件本地测试
+## python3 -m smtpd -n -c DebuggingServer localhost:8025
+
+#MAIL_PORT=8025
 #MAIL_SERVER=localhost
 #FLASK_DEBUG=False

@@ -28,12 +28,12 @@ class RegistrationForm(FlaskForm):
 
 	def validate_username(self, username):
 		user = User.query.filter_by(username=username.data).first()
-		if user is not None:
+		if user:
 			raise ValidationError(_l('Please use a different username .'))
 
 	def validate_email(self, email):
 		user = User.query.filter_by(email=email.data).first()
-		if user is not None:
+		if user:
 			raise ValidationError(_l('Please use a different email address .'))
 
 

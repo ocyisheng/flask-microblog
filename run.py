@@ -8,7 +8,6 @@
 from app import app
 from app import command
 
-
 def get_local_ip():
 	import socket
 	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
