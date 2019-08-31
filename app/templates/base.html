@@ -53,9 +53,10 @@
     {{ moment.include_moment() }}
     {{ moment.lang(g.locale) }}
     <script>
-        {#jQ脚本        #}
+        // 定义函数：jQ脚本使用ajx发送post请求获取翻译结果
+        // 需要 javascript:translate() 调用
         function translate(sourceEle, destElem, sourceLang, destLang) {
-            {# $('#xxxid') jQ id选择器获取目标dom 并用loading图片替换#}
+            {# $('#xxxid') jQ id选择器获取目标dom 并用loading图片替换 #}
             $(destElem).html('<img src="{{ url_for('static', filename='loading.gif') }}">');
             {# post 表单请求 参数1 链接 参数2 参数
                 done 成功的回调 向目标dom的text赋值请求结果
@@ -66,11 +67,57 @@
                 source_lang: sourceLang,
                 dest_lang: destLang
             }).done(function (response) {
-                $(destElem).text('译文：'+ response['text'])
+                $(destElem).text('译文：' + response['text'])
             }).fail(function () {
                 $(destElem).text("{{ _('Error:Could not contact server.') }}")
             })
         }
+        // jQ event函数绑定
+        $(function () {
+            var timer = null; // 延时的timer
+            var xhr = null; // ajax 请求对象
+            // 鼠标移入移出的回调函数，element.hover(handlerIn, handlerOut)
+            $('.user_popup').hover(
+                function (event) {
+                    // 鼠标移入的回调
+                    var elem = $(event.currentTarget);
+                    // 添加1s延时,
+                    timer = setTimeout(function () {
+                        timer = null;
+                        // 发送请求获取显示的popover 内容
+                        xhr = $.ajax('/user/' + elem.first().text().trim() + '/popup').done(
+                            // 成功的回调
+                            function (response) {
+                                xhr = null;
+                                // 显示 bootstrap组件popover
+                                elem.popover({
+                                    trigger: 'manual',  //手动触发
+                                    html: true,
+                                    animation: false,   //不要动画
+                                    container: elem,    //父标签
+                                    content: response   //显示的内容
+                                }).popover('show');
+                                // 通过ajax 添加flask-moment 元素是，必须调用改函数
+                                flask_moment_render_all();
+                            })
+                    }, 200)
+                }, function (event) {
+                    // 鼠标移出的回调
+                    var elem = $(event.currentTarget);
+                    if (timer) {
+                        // 清除timer
+                        clearTimeout(timer);
+                        timer = null;
+                    } else if (xhr) {
+                        // 清除ajax请求
+                        xhr.abort();
+                        xhr = null;
+                    } else {
+                        // 移除popup
+                        elem.popover('destroy');
+                    }
+                })
+        })
     </script>
 {% endblock %}
 
