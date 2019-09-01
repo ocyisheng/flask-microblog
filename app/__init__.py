@@ -5,63 +5,83 @@
 # @File    : __init__.py
 # @Software: PyCharm
 
-from flask import Flask
+from flask import Flask, request,current_app
+# 从config模块中导入Config类
+from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
-from flask_babel import Babel,lazy_gettext as _l
-# 从config模块中导入Config类
-from config import Config
-import logging
-from logging.handlers import SMTPHandler
-import os
-from logging.handlers import RotatingFileHandler
+from flask_babel import Babel, lazy_gettext as _l
 
-# flask
-app = Flask(__name__)
-# 配置
-app.config.from_object(Config)
+import logging
+from logging.handlers import SMTPHandler, RotatingFileHandler
+import os
+
+## 扩展对象生成
 # db
-db = SQLAlchemy(app)
+db = SQLAlchemy()
 # db迁移
-migrate = Migrate(app, db)
+migrate = Migrate()
 # 登陆扩展
-login = LoginManager(app)
+login = LoginManager()
 # 强制登陆认证
-login.login_view = 'login'
+login.login_view = 'auth.login'
 login.login_message = _l('Please log in to access this page.')
 # 邮件
-mail = Mail(app)
+mail = Mail()
 # 页面美化 框架
-bootstrap = Bootstrap(app)
+bootstrap = Bootstrap()
 # 时间处理
-moment = Moment(app)
+moment = Moment()
 # 语言本地话
-babel = Babel(app)
+babel = Babel()
 
-from flask import request
+
+def create_app(config_class=Config):
+	# app对象
+	app = Flask(__name__)
+	# 向app中添加配置
+	app.config.from_object(config_class)
+
+	# 向app中添加相应扩展
+	db.init_app(app)
+	migrate.init_app(app, db)
+	login.init_app(app)
+	mail.init_app(app)
+	bootstrap.init_app(app)
+	moment.init_app(app)
+	babel.init_app(app)
+
+	## 向app中注册各个子模块的蓝图
+	from app.errors import bp as errors_bp
+	app.register_blueprint(errors_bp)
+
+	from app.auth import bp as auth_bp
+	# 添加前置路由作为命名空间 /autho/login ...
+	app.register_blueprint(auth_bp, url_prefix='/auth')
+
+	from app.main import bp as main_bp
+	app.register_blueprint(main_bp)
+
+	# 错误邮件通知与错误本地记录
+	if not app.debug and not app.testing:
+		mail_notify(app)
+		file_logging(app)
+
+	return app
+
 
 # 语言本地化 在request前 利用装饰器 获取最适合的语言版本
 @babel.localeselector
 def get_locale():
-	return request.accept_languages.best_match(app.config['LANGUAGES'])
-
-
-from app import routes, models, errors
-from app.models import User, Post
-
-
-# 向flask shell运行环境中 添加自定义上下文
-@app.shell_context_processor
-def make_shell_context():
-	return {'db': db, 'User': User, 'Post': Post}
+	return request.accept_languages.best_match(current_app.config['LANGUAGES'])
 
 
 # 邮件错误通知
-def mail_notify():
+def mail_notify(app):
 	if app.config['MAIL_SERVER']:
 		auth = None
 	if app.config['MAIL_USERNAME'] or app.config['MAIL_PASSWORD']:
@@ -80,7 +100,7 @@ def mail_notify():
 
 
 # 本地日志文件
-def file_logging():
+def file_logging(app):
 	if app.env is 'production':
 		if not os.path.exists('logs'):
 			os.mkdir('logs')
@@ -90,7 +110,5 @@ def file_logging():
 		file_handler.setLevel(logging.INFO)
 		app.logger.addHandler(file_handler)
 
-
-if not app.debug:
-	mail_notify()
-	file_logging()
+		app.logger.setLevel(logging.INFO)
+		app.logger.info('Microblog startup')

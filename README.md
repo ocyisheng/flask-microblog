@@ -37,6 +37,9 @@
 * 终端1 python3 -m smtpd -n -c DebuggingServer localhost:8025
 * 终端2 set MAIL_SERVER=localhost     set MAIL_PORT=8025
 
+***requirements.txt 自动生成***
+* pip3 freeze > requirements.txt
+
 ## 语言本地化
 ***flask—babel 安装使用翻译功能***
 * pip安装flask-babel扩展
@@ -70,5 +73,5 @@
 * 自定义命令组使用
    - flask 自定义命令组名称 自定义命令 参数
  
-    
+   
                                                                                        

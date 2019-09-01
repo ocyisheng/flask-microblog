@@ -5,13 +5,14 @@
 # @File    : models.py
 # @Software: PyCharm
 
-from app import db, app
+from app import db
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from app import login
 from hashlib import md5
 from time import time
+from flask import current_app
 import jwt
 
 # User关注关联辅助表
@@ -50,7 +51,6 @@ class User(UserMixin, db.Model):
 	)
 
 	def __repr__(self):
-		# return '<User {}>'.format(self.username)
 		return '<User {}, Email {}, Password_Hash {}, Post {}>'.format(self.username, self.email, self.password_hash,
 																	   self.posts)
 
@@ -95,12 +95,12 @@ class User(UserMixin, db.Model):
 
 	def get_reset_password_token(self, expires_in=600):
 		return jwt.encode(payload={'reset_password': self.id, 'exp': time() + expires_in},
-						  key=app.config['SECRET_KEY'],
+						  key=current_app.config['SECRET_KEY'],
 						  algorithm='HS256').decode('utf-8')
 
 	@staticmethod
 	def verify_reset_password_token(token):
-		result_data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+		result_data = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])
 		if 'reset_password' in result_data:
 			user_id = result_data['reset_password']
 			return User.query.get(user_id)
