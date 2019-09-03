@@ -24,7 +24,7 @@ class Config(object):
 	SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 	# 分页配置
-	POSTS_PER_PAGE = 5
+	POSTS_PER_PAGE = 4
 	# 语言本地化
 	LANGUAGES = ['en', 'zh']
 

@@ -13,7 +13,7 @@ from app import login
 from hashlib import md5
 from time import time
 from flask import current_app
-import jwt
+import jwt, json
 
 # User关注关联辅助表
 followers = db.Table(
@@ -21,6 +21,7 @@ followers = db.Table(
 	db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
 	db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
 )
+
 
 # 告知登录扩展flask-login login对象当前的用户对象
 @login.user_loader
@@ -40,7 +41,11 @@ class User(UserMixin, db.Model):
 	# 扩充字段
 	about_me = db.Column(db.String(140))
 	last_seen = db.Column(db.DateTime, default=datetime.utcnow())
-	# 关注
+
+	# 通知
+	notifications = db.relationship('Notification', foreign_keys='Notification.user_id', lazy='dynamic')
+
+	# 关注 user与post 关系
 	followed = db.relationship(
 		'User',
 		secondary=followers,
@@ -50,16 +55,15 @@ class User(UserMixin, db.Model):
 		lazy='dynamic'
 	)
 
+	# 发送message user与message
+	messages_sent = db.relationship('Message', foreign_keys='Message.sender_id', backref='author', lazy='dynamic')
+	messages_received = db.relationship('Message', foreign_keys='Message.recipient_id', backref='recipient',
+										lazy='dynamic')
+	last_message_read_time = db.Column(db.DateTime)
+
 	def __repr__(self):
 		return '<User {}, Email {}, Password_Hash {}, Post {}>'.format(self.username, self.email, self.password_hash,
 																	   self.posts)
-
-	# 密码设置与验证
-	def set_password(self, password):
-		self.password_hash = generate_password_hash(password)
-
-	def check_password(self, password):
-		return check_password_hash(self.password_hash, password)
 
 	# 头像
 	def avatar(self, size):
@@ -93,6 +97,13 @@ class User(UserMixin, db.Model):
 		own = Post.query.filter_by(user_id=self.id)
 		return followed.union(own).order_by(Post.timestamp.desc())
 
+	# 密码设置与验证
+	def set_password(self, password):
+		self.password_hash = generate_password_hash(password)
+
+	def check_password(self, password):
+		return check_password_hash(self.password_hash, password)
+
 	def get_reset_password_token(self, expires_in=600):
 		return jwt.encode(payload={'reset_password': self.id, 'exp': time() + expires_in},
 						  key=current_app.config['SECRET_KEY'],
@@ -104,6 +115,16 @@ class User(UserMixin, db.Model):
 		if 'reset_password' in result_data:
 			user_id = result_data['reset_password']
 			return User.query.get(user_id)
+
+	def new_messages(self):
+		last_read_time = self.last_message_read_time or datetime(1900, 1, 1)
+		return Message.query.filter_by(recipient=self).filter(Message.timestamp > last_read_time).count()
+
+	def add_notification(self, name, data):
+		self.notifications.filter_by(name=name).delete()
+		n = Notification(name=name, payload_json=json.dumps(data), user_id=self.id)
+		db.session.add(n)
+		return n
 
 
 class Post(db.Model):
@@ -119,3 +140,25 @@ class Post(db.Model):
 
 	def __repr__(self):
 		return '<Post {}>'.format(self.body)
+
+
+class Message(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	sender_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+	recipient_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+	body = db.Column(db.String(140))
+	# 信息创建时间
+	timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+
+	def __repr__(self):
+		return '<Message {}>'.format(self.body)
+
+class Notification(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	name = db.Column(db.String(128), index=True)
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+	timestamp = db.Column(db.Float, index=True, default=time)
+	payload_json = db.Column(db.Text)
+
+	def get_data(self):
+		return json.loads(str(self.payload_json))

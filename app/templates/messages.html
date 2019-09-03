@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block app_content %}
+    <h2>{{ _('Message') }}</h2>
+    {# 消息列表 #}
+    <table class="table">
+        {% for post in messages %}
+            {% include '_post.html' %}
+        {% endfor %}
+    </table>
+    {# 翻页控件   #}
+    {% include '_pager.html' %}
+{% endblock %}

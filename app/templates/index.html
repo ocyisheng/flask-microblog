@@ -41,23 +41,12 @@
         {{ wtf.quick_form(form) }}
         <br>
     {% endif %}
+    {# 帖子列表 #}
     <table class="table table-hover">
         {% for post in posts %}
             {% include '_post.html' %}
         {% endfor %}
     </table>
-    <nav aria-label="...">
-        <ul class="pager">
-            <li class="previous{% if not prev_url %} disabled{% endif %}">
-                <a href="{{ prev_url or '#' }}">
-                    <span aria-hidden="true">&larr;</span> {{ _('Newer posts') }}
-                </a>
-            </li>
-            <li class="next{% if not next_url %} disabled{% endif %}">
-                <a href="{{ next_url or '#' }}">
-                    {{ _('Older posts') }} <span aria-hidden="true">&rarr;</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
+    {# 翻页控件  #}
+    {% include '_pager.html' %}
 {% endblock %}

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-09-01 13:25+0800\n"
+"POT-Creation-Date: 2019-09-03 14:59+0800\n"
 "PO-Revision-Date: 2019-08-27 23:25+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh\n"
@@ -112,13 +112,17 @@ msgstr "您的密码已重置。"
 msgid "About Me"
 msgstr "关于我"
 
-#: app/main/forms.py:18 app/main/forms.py:33
+#: app/main/forms.py:18 app/main/forms.py:33 app/main/forms.py:38
 msgid "Submit"
 msgstr "提交"
 
 #: app/main/forms.py:32
 msgid "Say something"
 msgstr "说你想说的吧！"
+
+#: app/main/forms.py:37 app/templates/messages.html:4
+msgid "Message"
+msgstr "消息"
 
 #: app/main/routes.py:52
 msgid "Your post is now live !"
@@ -136,36 +140,54 @@ msgstr "探索"
 msgid "Profile"
 msgstr "个人主页"
 
-#: app/main/routes.py:113
+#: app/main/routes.py:114
 msgid "Your changes have been saved."
 msgstr "您的更改已保存。"
 
-#: app/main/routes.py:118 app/templates/edit_profile.html:32
+#: app/main/routes.py:119 app/templates/edit_profile.html:32
 msgid "Edit Profile"
 msgstr "编辑个人主页"
 
-#: app/main/routes.py:127 app/main/routes.py:144
+#: app/main/routes.py:128 app/main/routes.py:145
 #, python-format
 msgid "User %(username)s not found."
 msgstr "用户%(username)s不存在。"
 
-#: app/main/routes.py:130
+#: app/main/routes.py:131
 msgid "You cannot follow yourself!"
 msgstr "并不能关注您自己！"
 
-#: app/main/routes.py:134
+#: app/main/routes.py:135
 #, python-format
 msgid "You are following %(username)s !"
 msgstr "你关注了%(username)s！"
 
-#: app/main/routes.py:147
+#: app/main/routes.py:148
 msgid "You cannot unfollow yourself!"
 msgstr "并不能取关您自己！"
 
-#: app/main/routes.py:151
+#: app/main/routes.py:152
 #, python-format
 msgid "You are unfollowing %(username)s !"
 msgstr "你已取消关注%(username)s！"
+
+#: app/main/routes.py:171
+msgid "Your message has been sent."
+msgstr "您的信息已发送。"
+
+#: app/main/routes.py:173
+msgid "Send Message"
+msgstr "发送消息"
+
+#: app/templates/_pager.html:5
+#, python-format
+msgid "Newer %(item_name)s"
+msgstr "上一页"
+
+#: app/templates/_pager.html:10
+#, python-format
+msgid "Older %(item_name)s"
+msgstr "下一页"
 
 #: app/templates/_post.html:23
 #, python-format
@@ -193,11 +215,15 @@ msgid "Login"
 msgstr "登录"
 
 #: app/templates/base.html:149
+msgid "Messages"
+msgstr "消息"
+
+#: app/templates/base.html:152
 #, python-format
 msgid "Hi,%(username)s"
 msgstr "您好，%(username)s"
 
-#: app/templates/base.html:151
+#: app/templates/base.html:155
 msgid "Logout"
 msgstr "退出"
 
@@ -206,13 +232,10 @@ msgstr "退出"
 msgid "Hello,%(username)s"
 msgstr "您好，%(username)s"
 
-#: app/templates/index.html:53 app/templates/user.html:93
-msgid "Newer posts"
-msgstr "上一页"
-
-#: app/templates/index.html:58 app/templates/user.html:98
-msgid "Older posts"
-msgstr "下一页"
+#: app/templates/send_message.html:5
+#, python-format
+msgid "Send Message to %(recipient)s"
+msgstr "私信 %(recipient)s"
 
 #: app/templates/user.html:56
 msgid "User:"
@@ -233,6 +256,10 @@ msgstr "关注"
 #: app/templates/user.html:76 app/templates/user_popup.html:23
 msgid "Unfollow"
 msgstr "取消关注"
+
+#: app/templates/user.html:81
+msgid "Send private message"
+msgstr "私信他/她"
 
 #: app/templates/user_popup.html:15
 #, python-format

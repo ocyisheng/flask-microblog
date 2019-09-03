@@ -6,7 +6,7 @@
 # @Software: PyCharm
 
 from app import create_app, db, cli
-from app.models import User, Post
+from app.models import User, Post, Notification, Message
 
 # def get_local_ip():
 # 	import socket
@@ -25,7 +25,7 @@ cli.register(app)
 # 向flask shell运行环境中 添加自定义上下文
 @app.shell_context_processor
 def make_shell_context():
-	return {'db': db, 'User': User, 'Post': Post}
+	return {'db': db, 'User': User, 'Post': Post, 'Notification': Notification, 'Message': Message}
 
 
 if __name__ == '__main__':
