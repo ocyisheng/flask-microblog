@@ -13,7 +13,7 @@ FLASK_DEBUG=True
 
 
 # 数据库路径
-# DATABASE_URL=
+# DATABASE_URI=
 SECRET=
 
 # 邮件测试
