@@ -13,7 +13,10 @@ FLASK_DEBUG=True
 
 
 # 数据库路径
-# DATABASE_URI=
+# DATABASE_URL=
+SECRET=
 
 # 邮件测试
 #FLASK_DEBUG=False
+#MAIL_PORT=8025
+#MAIL_SERVER=localhost

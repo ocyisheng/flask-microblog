@@ -13,7 +13,8 @@ FLASK_ENV=production
 FLASK_DEBUG=False
 
 # 数据库路径
-
+# DATBASE_URL=
+# SECRET=
 
 ## 邮件本地测试
 ## python3 -m smtpd -n -c DebuggingServer localhost:8025
