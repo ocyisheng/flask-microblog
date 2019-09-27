@@ -12,9 +12,7 @@ FLASK_ENV=production
 # 生产环境必须为False
 FLASK_DEBUG=False
 
-# 数据库路径
-# DATBASE_URI=
-# SECRET=
+
 
 ## 邮件本地测试
 ## python3 -m smtpd -n -c DebuggingServer localhost:8025
@@ -23,9 +21,15 @@ FLASK_DEBUG=False
 #FLASK_DEBUG=False
 
 
-# # 线上邮件
-# MAIL_SERVER=smtp.googlemail.com
-# MAIL_PORT=587
-# MAIL_USE_TLS=1
-# MAIL_USERNAME=<your-gmail-username>
-# MAIL_PASSWORD=<your-gmail-password>
+# 新建.env 文件
+
+## 数据库路径
+#DATABASE_URI=mysql+pymysql://microblog:my-microblog1234@localhost:3306/microblog
+#SECRET_KEY=fuoygkjfretysxhfgdr3239357sfghhg
+
+## 线上邮件
+#MAIL_SERVER=smtp.googlemail.com
+#MAIL_PORT=587
+#MAIL_USE_TLS=1
+#MAIL_USERNAME=gao
+#MAIL_PASSWORD=gap-password

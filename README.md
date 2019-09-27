@@ -18,12 +18,45 @@
 * deactivate                退出venv
 
 
-## 线上环境部署（Ningx+Gunicorn）
+## 线上环境部署（Nginx+Gunicorn+Supervisor）
+
+***安装venv***
 * pip3 install virtualenv                  安装virtualenv
 * cd /data/www/my_microblog
 * which python3 -> /usr/bin/python3
 * virtualenv -p /usr/bin/python3 venv      在项目根目录下生成 virtualenv相关的环境文件，已有就不再生成
 
+
+***安装Gunicorn***
+* python web 环境
+* 安装 pip3 install gunicorn
+* 启动 gunicorn -w 4 -b ip:5000 run:app 
+
+***安装supervisor***
+* 确保程序的自动启动
+* apt-get supervisor
+* cd /etc/supervisor/conf.d
+* vim microblog.conf 添加以下
+
+    - [program:microblog]
+    - command=/data/www/my_microblog/venv/bin/gunicorn -b 192.168.1.105:5000 -w 4 run:app
+    - directory=/data/www/my_microblog
+    - user=root
+    - autostart=true
+    - autorestart=true
+    - stopasgroup=true
+    - killasgroup=true
+
+
+***安装MySql替换sql***
+* 安装所需的扩展 pip3 install pymysql
+* 安装mysql apt-get mysql 
+* 设置root用户及密码
+* 添加microblog用户 并设置相关数据库访问权限
+* 在.env 文件中添加 DATABASE_URI=mysql+pymysql://microblog:my-microblog1234@localhost:3306/microblog
+
+
+***安装ningx***
 
 
 ## 启动线上服务
@@ -31,8 +64,18 @@
 * . venv/bin/activate                          开启virtualenv
 * gunicorn -w 4 -b 127.0.0.1:5000 run:app      开启gunicorn
 * service nginx start                          开启nginx
+* 若supervisor、nginx 已安装配置完成，直接启动 supervisoctl start 即可 
 
-## 调试注意点记录
+## 更新代码
+* 需在venv中
+* git pull
+* sudo supervisorctl stop microblog
+* flask db upgrade
+* flask translate compile
+* sudo supervisorctl start microblog
+
+
+microblog## 调试注意点记录
 ***邮件***
 * 终端1 python3 -m smtpd -n -c DebuggingServer localhost:8025
 * 终端2 set MAIL_SERVER=localhost     set MAIL_PORT=8025

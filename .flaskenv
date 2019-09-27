@@ -11,12 +11,3 @@ FLASK_ENV=development
 # 生产环境必须为False
 FLASK_DEBUG=True
 
-
-# 数据库路径
-# DATABASE_URI=
-SECRET=
-
-# 邮件测试
-#FLASK_DEBUG=False
-#MAIL_PORT=8025
-#MAIL_SERVER=localhost
