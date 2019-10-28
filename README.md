@@ -75,7 +75,7 @@
 * sudo supervisorctl start microblog
 
 
-microblog## 调试注意点记录
+## 调试注意点记录
 ***邮件***
 * 终端1 python3 -m smtpd -n -c DebuggingServer localhost:8025
 * 终端2 set MAIL_SERVER=localhost     set MAIL_PORT=8025
